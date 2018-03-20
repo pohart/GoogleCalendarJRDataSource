@@ -1,0 +1,52 @@
+apply plugin: 'java'
+
+//mainClassName = 'pohart.GoogleCalendarJRDataSource'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+version = '1.0'
+
+repositories {
+    jcenter()
+    
+     //maven{url "http://jasperreports.sourceforge.net/maven2/"}
+     //maven{url "http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/"}
+}
+
+dependencies {
+    compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
+    compile 'com.google.apis:google-api-services-calendar:v3-rev254-1.22.0'
+    compile 'net.sf.jasperreports:jasperreports:6.5.1'
+    compile 'com.itextpdf:itextpdf:5.5.13'
+    compile 'org.olap4j:olap4j:1.2.0'
+}
+configurations.all {
+//    resolutionStrategy {
+//        force 'com.itextpdf:itextpdf:5.5.13'
+//    }
+    exclude group: "com.lowagie", module: "itext"
+
+}
+
+
+task copyToLib(type: Copy) {
+    into "$buildDir/output/lib"
+    from configurations.runtime
+}
+
+compileJava.dependsOn(copyToLib)
+/*
+jar {
+    from {
+        (configurations.runtime).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+	
+    }
+	from ("client_secret.json")
+    manifest {
+        attributes("Main-Class": "GoogleCalendarJRDataSource" )
+    }
+	exclude('META-INF/BCKEY.*')
+}
+*/
