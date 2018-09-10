@@ -32,6 +32,9 @@ import java.util.List;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRField;
 
+/**
+ *  Access a Google Calendar as a Jasper Reports DataSource
+ */
 public class GoogleCalendarJRDataSource implements JRDataSource{
 	
 	private final ZonedDateTime start;
@@ -76,7 +79,7 @@ public class GoogleCalendarJRDataSource implements JRDataSource{
     /**
      * Creates an authorized Credential object.
      * @return an authorized Credential object.
-     * @throws IOException
+     * @throws IOException if there is an error getting the credential
      */
     public Credential authorize() throws IOException {
         // Load client secrets.
