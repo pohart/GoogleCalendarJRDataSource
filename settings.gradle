@@ -16,4 +16,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'GoogleCalendarJRDataSource'
+rootProject.name = 'google-calendar-jr-datasource'

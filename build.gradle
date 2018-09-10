@@ -1,29 +1,68 @@
-apply plugin: 'java'
+plugins {
+    id "com.jfrog.bintray" version "1.8.4"
+    id 'maven-publish'
+    id 'java-library'
+    id 'signing'
+    }
 
 //mainClassName = 'pohart.GoogleCalendarJRDataSource'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = '1.0'
+version = '1.0.0.RC.1'
+bintray {
+    user = 'pohart'
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['MyPublication']
+    pkg {
+        version {
+            name = '1.0.0.RC.1'
+            desc = 'Initial Release'
+            released  = new Date()
+	}
+        repo = 'googleCalendar-jr-data-source'
+        name = 'google-calendar-jr-datasource'
+        licenses = ['GPL-3.0']
+        vcsUrl = 'https://github.com/pohart/GoogleCalendarJRDataSource'
+    }
+}
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            groupId 'com.pohart.google-calendar-jr-datasource'
+            artifactId 'google-calendar-jr-datasource'
+            version '1.0.0.RC.1'
+	    //pom {
+	    //    name = 'Google Calendar JR DataSource'
+	    //    description = 'Access a google calendar as a JasperReports datasource'
+            //    url = 'https://github.com/pohart/GoogleCalendarJRDataSource'
+            //    scm {
+            //        url = 'https://github.com/pohart/GoogleCalendarJRDataSource'
+            //    }
+	    //}
+        }
+    }
+}  
+//signing {
+//    sign publishing.publications.MyPublication
+//}
 
 repositories {
     jcenter()
     
-     //maven{url "http://jasperreports.sourceforge.net/maven2/"}
-     //maven{url "http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/"}
 }
 
 dependencies {
     compile 'com.google.api-client:google-api-client:1.22.0'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
     compile 'com.google.apis:google-api-services-calendar:v3-rev254-1.22.0'
-    compile 'net.sf.jasperreports:jasperreports:6.5.1'
+    compile 'net.sf.jasperreports:jasperreports:6.7.0'
     compile 'com.itextpdf:itextpdf:5.5.13'
     compile 'org.olap4j:olap4j:1.2.0'
 }
 configurations.all {
-//    resolutionStrategy {
-//        force 'com.itextpdf:itextpdf:5.5.13'
-//    }
     exclude group: "com.lowagie", module: "itext"
 
 }
@@ -34,6 +73,15 @@ task copyToLib(type: Copy) {
     from configurations.runtime
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
 compileJava.dependsOn(copyToLib)
 /*
 jar {
